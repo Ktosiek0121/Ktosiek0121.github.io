@@ -44,36 +44,50 @@ upload.addEventListener('click', () => {
 });
 
 imageInput.addEventListener('change', (event) => {
-
     upload.classList.remove("upload_loaded");
     upload.classList.add("upload_loading");
-
-    upload.removeAttribute("selected")
+    upload.removeAttribute("selected");
 
     var file = imageInput.files[0];
-    var data = new FormData();
-    data.append("image", file);
+    var reader = new FileReader();
 
-    fetch('	https://i.imgur.com/77HVKvf.png' ,{
-        method: 'POST',
-        headers: {
-            'Authorization': 'Client-ID c8c28d402435402'
-        },
-        body: data
-    })
-    .then(result => result.json())
-    .then(response => {
-        
-        var url = response.data.link;
-        upload.classList.remove("error_shown")
-        upload.setAttribute("selected", url);
-        upload.classList.add("upload_loaded");
-        upload.classList.remove("upload_loading");
-        upload.querySelector(".upload_uploaded").src = url;
+    reader.onloadend = function() {
+        // Get base64 string of the image
+        var base64Image = reader.result.replace(/^data:image\/[a-z]+;base64,/, "");
 
-    })
+        // Prepare form data
+        var data = new FormData();
+        data.append('key', '2af042116b96ac785f1b324d94923a9c'); // <-- Replace with your API key
+        data.append('image', base64Image);
 
-})
+        fetch('https://api.imgbb.com/1/upload', {
+            method: 'POST',
+            body: data
+        })
+        .then(result => result.json())
+        .then(response => {
+            if (response.success) {
+                var url = response.data.url;
+                upload.classList.remove("error_shown");
+                upload.setAttribute("selected", url);
+                upload.classList.add("upload_loaded");
+                upload.classList.remove("upload_loading");
+                upload.querySelector(".upload_uploaded").src = url;
+            } else {
+                upload.classList.add("error_shown");
+                upload.classList.remove("upload_loading");
+                alert("Upload failed: " + response.error.message);
+            }
+        })
+        .catch(error => {
+            upload.classList.add("error_shown");
+            upload.classList.remove("upload_loading");
+            alert("Upload failed: " + error);
+        });
+    };
+
+    reader.readAsDataURL(file);
+});
 
 document.querySelector(".go").addEventListener('click', () => {
 
@@ -160,6 +174,7 @@ document.querySelectorAll(".input").forEach((input) => {
         localStorage.setItem(input.id, input.value);
     });
 });
+
 
 
 
