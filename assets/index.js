@@ -54,7 +54,7 @@ imageInput.addEventListener('change', (event) => {
     var data = new FormData();
     data.append("image", file);
 
-    fetch('	https://api.imgur.com/3/image' ,{
+    fetch('	https://i.imgur.com/77HVKvf.png' ,{
         method: 'POST',
         headers: {
             'Authorization': 'Client-ID c8c28d402435402'
@@ -160,5 +160,6 @@ document.querySelectorAll(".input").forEach((input) => {
         localStorage.setItem(input.id, input.value);
     });
 });
+
 
 
