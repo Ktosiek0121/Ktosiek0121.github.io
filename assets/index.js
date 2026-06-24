@@ -57,7 +57,7 @@ imageInput.addEventListener('change', (event) => {
 
         // Prepare form data
         var data = new FormData();
-        data.append('key', '2af042116b96ac785f1b324d94923a9c'); // <-- Replace with your API key
+        data.append('key', 'df4ffe6cb4b5b70dacc201152c21fc0e'); // <-- Replace with your API key
         data.append('image', base64Image);
 
         fetch('https://api.imgbb.com/1/upload', {
